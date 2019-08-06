@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <input id="addLine" type="number" placeholder="Enter line number">
+  <input id="submitLine" type="submit">
+  <p class="content"></p>
+  
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    var socket = io();
+    socket.on('connect', function () {
+      socket.on('changed', (data) => {
+        var displayData = document.getElementsByClassName('content')[0];
+        displayData.innerHTML = data.map(x => `<p>${x}</p>`).join('')
+      })
+      var addline = document.getElementById('submitLine');
+      addline.addEventListener('click', (e) => {
+        var lines = document.getElementById('addLine').value;
+        socket.emit('lines', lines);
+      })
+      
+    });
+
+  </script>
+</body>
+</html>
