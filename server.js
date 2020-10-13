@@ -1,9 +1,9 @@
 var express = require('express');
 var fs = require('fs');
-var app = express();
+// var app = express();
 
 
-const server = require('http').createServer(app);
+const server = require('http').createServer(handleRequest);
 
 const io = require('socket.io')(server);
 
@@ -20,11 +20,19 @@ io.on('connection', (socket) => {
   })
 });
 
-app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/index.html');
-});
+// app.get('/', (req, res) => {
+//   res.sendFile(__dirname + '/index.html');
+// });
 
-fs.watchFile('text.txt', {persistent:true, interval:1000}, (data) => { 
+function handleRequest(req, res) {
+  if(req.url === '/' && req.method === 'GET') {
+    fs.createReadStream('./index.html').pipe(res);
+  } else {
+    res.end('Page Not Found')
+  }
+}
+
+fs.watchFile('text.txt', {persistent:true, interval:1000}, (_data) => { 
   var newdata = readFileContent();
   io.sockets.emit('changed', newdata);
 });
