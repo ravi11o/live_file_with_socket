@@ -24,7 +24,7 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');
 });
 
-fs.watchFile('text.txt',{persistent:true, interval:1000}, (data) => { 
+fs.watchFile('text.txt', {persistent:true, interval:1000}, (data) => { 
   var newdata = readFileContent();
   io.sockets.emit('changed', newdata);
 });
